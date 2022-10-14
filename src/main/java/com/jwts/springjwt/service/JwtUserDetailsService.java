@@ -39,7 +39,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     public Map<String, Object> createUserDetails(final String firstName, final String lastName, final String userName, final String email, final String password) {
-        final User getUserAuthority = getUserAuthority("ADMIN", userName, password);
+        final User getUserAuthority = getUserAuthority("ADMIN", email, password);
         final String token = jwtTokenUtil.generateToken(getUserAuthority);
         final var user = getUser(firstName, lastName, email, password);
 
