@@ -25,7 +25,6 @@ public class JwtUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
 
-
     public JwtUserDetailsService(UserRepository userRepository, JwtTokenUtil jwtTokenUtil) {
         this.userRepository = userRepository;
         this.jwtTokenUtil = jwtTokenUtil;
@@ -33,38 +32,51 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+
         com.jwts.springjwt.model.User user = userRepository.findByUserName(username);
         log.info(user.toString());
+
         return getUserAuthority(user.getRole().name(), user.getUserName(), user.getPassword());
     }
 
-    public Map<String, Object> createUserDetails(final String firstName, final String lastName, final String userName, final String email, final String password) {
+    public Map<String, Object> createUserDetails(final String firstName,
+                                                 final String lastName,
+                                                 final String userName,
+                                                 final String email,
+                                                 final String password)
+    {
+
         final User getUserAuthority = getUserAuthority("ADMIN", email, password);
         final String token = jwtTokenUtil.generateToken(getUserAuthority);
         final var user = getUser(firstName, lastName, email, password);
-
         userRepository.save(user);
 
         return getResponse(email, token);
     }
 
-    private static Map<String, Object> getResponse(final String userName, final String token) {
+    private static Map<String, Object> getResponse(final String userName,
+                                                   final String token)
+    {
+
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("error", false);
         responseMap.put("username", userName);
         responseMap.put("message", "Account created successfully");
         responseMap.put("token", token);
+
         return responseMap;
     }
 
     private static User getUserAuthority(final String userRole, final String username, final String password) {
         List<GrantedAuthority> authorityList = new ArrayList<>();
         authorityList.add(new SimpleGrantedAuthority(userRole));
+
         return new User(username, password, authorityList);
     }
 
     private com.jwts.springjwt.model.User getUser(final String firstName, final String lastName, final String email, final String password) {
         final String encodedPassword = new BCryptPasswordEncoder().encode(password);
+
         return com.jwts.springjwt.model.User.builder()
                 .password(encodedPassword)
                 .userName(email)

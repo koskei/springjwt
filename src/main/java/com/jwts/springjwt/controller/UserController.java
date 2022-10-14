@@ -16,6 +16,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
     private final UserRepository userRepository;
 
     public UserController(UserRepository userRepository) {
@@ -25,11 +26,13 @@ public class UserController {
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public Map<String, Object> getUserName() {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Map<String, Object> userMap = new HashMap<>();
         User user = userRepository.findByUserName(authentication.getName());
         userMap.put("username", user);
         userMap.put("error", false);
+
         return userMap;
     }
 }

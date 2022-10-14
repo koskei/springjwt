@@ -9,8 +9,7 @@ import java.util.List;
 
 public class UserAuthorityUtil {
 
-
-    public static User getUserAuthority(final String userRole, final String username,final String password) {
+    private static User getUserAuthority(final String userRole, final String username,final String password) {
         List<GrantedAuthority> authorityList = new ArrayList<>();
         authorityList.add(new SimpleGrantedAuthority(userRole));
         return new User(username, password, authorityList);

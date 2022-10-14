@@ -16,8 +16,7 @@ import java.util.Map;
 @Slf4j
 public class AuthenticationController {
 
-
-    final JwtUserDetailsService userDetailsService;
+    private final JwtUserDetailsService userDetailsService;
     private final AuthorizationService authorizationService;
 
     public AuthenticationController(JwtUserDetailsService userDetailsService,
@@ -28,20 +27,26 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> loginUser(@RequestParam("user_name") String username,
-                                       @RequestParam("password") String password) {
+    public ResponseEntity<Map<String, Object>> loginUser(
+            @RequestParam("user_name") String username,
+            @RequestParam("password") String password)
+    {
+        
         return authorizationService.authenticateUser(username, password);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, Object>> saveUser(@RequestParam("first_name") String firstName,
-                                      @RequestParam("last_name") String lastName,
-                                      @RequestParam("user_name") String userName, @RequestParam("email") String email
-            , @RequestParam("password") String password) {
+    public ResponseEntity<Map<String, Object>> saveUser(
+            @RequestParam("first_name") String firstName,
+            @RequestParam("last_name") String lastName,
+            @RequestParam("user_name") String userName,
+            @RequestParam("email") String email,
+            @RequestParam("password") String password)
+    {
 
         Map<String, Object> responseMap = userDetailsService.createUserDetails(
-                firstName, lastName,userName, email, password
-        );
+                firstName, lastName,userName, email, password);
+        
         return ResponseEntity.ok(responseMap);
     }
 }

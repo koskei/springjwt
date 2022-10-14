@@ -49,16 +49,12 @@ public class AuthorizationService {
         final Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
         if (auth.isAuthenticated()) {
-
             log.info("Logged In");
             final UserDetails userDetails = loadUserByUsername(username);
             final String token = jwtTokenUtil.generateToken(userDetails);
-
             final Map<String, Object> responseMap = getResponseEntity(true, "Logged In", token);
             return ResponseEntity.status(200).body(responseMap);
-
         } else {
-
             final Map<String, Object> responseMap = getResponseEntity(true, "Invalid Credentials", null);
             return ResponseEntity.status(401).body(responseMap);
         }
