@@ -61,7 +61,7 @@ public class AuthorizationService {
     }
 
     private static Map<String, Object> getResponseEntity(final boolean err, final String message, final String token) {
-        Map<String, Object> responseMap = new HashMap<>();
+        final Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("error", err);
         responseMap.put("message", message);
         responseMap.put("token", token);
@@ -69,7 +69,7 @@ public class AuthorizationService {
     }
 
     private UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.jwts.springjwt.model.User user = userRepository.findByUserName(username);
+        final com.jwts.springjwt.model.User user = userRepository.findByUserName(username);
         log.info(user.toString());
         return getUserAuthority(user.getRole().name(), user.getUserName(), user.getPassword());
     }

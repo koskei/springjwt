@@ -43,8 +43,7 @@ public class JwtUserDetailsService implements UserDetailsService {
                                                  final String lastName,
                                                  final String userName,
                                                  final String email,
-                                                 final String password)
-    {
+                                                 final String password) {
 
         final User getUserAuthority = getUserAuthority("ADMIN", email, password);
         final String token = jwtTokenUtil.generateToken(getUserAuthority);
@@ -55,8 +54,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     private static Map<String, Object> getResponse(final String userName,
-                                                   final String token)
-    {
+                                                   final String token) {
 
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("error", false);
@@ -68,7 +66,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     private static User getUserAuthority(final String userRole, final String username, final String password) {
-        List<GrantedAuthority> authorityList = new ArrayList<>();
+        final List<GrantedAuthority> authorityList = new ArrayList<>();
         authorityList.add(new SimpleGrantedAuthority(userRole));
 
         return new User(username, password, authorityList);

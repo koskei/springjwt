@@ -20,8 +20,7 @@ public class AuthenticationController {
     private final AuthorizationService authorizationService;
 
     public AuthenticationController(JwtUserDetailsService userDetailsService,
-                                    AuthorizationService authorizationService)
-    {
+                                    AuthorizationService authorizationService) {
         this.userDetailsService = userDetailsService;
         this.authorizationService = authorizationService;
     }
@@ -29,9 +28,8 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> loginUser(
             @RequestParam("user_name") String username,
-            @RequestParam("password") String password)
-    {
-        
+            @RequestParam("password") String password) {
+
         return authorizationService.authenticateUser(username, password);
     }
 
@@ -41,12 +39,11 @@ public class AuthenticationController {
             @RequestParam("last_name") String lastName,
             @RequestParam("user_name") String userName,
             @RequestParam("email") String email,
-            @RequestParam("password") String password)
-    {
+            @RequestParam("password") String password) {
 
         Map<String, Object> responseMap = userDetailsService.createUserDetails(
-                firstName, lastName,userName, email, password);
-        
+                firstName, lastName, userName, email, password);
+
         return ResponseEntity.ok(responseMap);
     }
 }
