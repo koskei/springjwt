@@ -35,11 +35,9 @@ public class AuthorizationService {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
-
     public ResponseEntity<Map<String, Object>> authenticateUser(String username, String password) {
         try {
             return validateUserCredentials(username, password);
-
         } catch (BadCredentialsException e) {
             final Map<String, Object> errMessage = getResponseEntity(true, "Invalid Credentials", null);
             return ResponseEntity.status(401).body(errMessage);
@@ -47,16 +45,20 @@ public class AuthorizationService {
     }
 
     private ResponseEntity<Map<String, Object>> validateUserCredentials(String username, String password) {
-        Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password));
+
+        final Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
         if (auth.isAuthenticated()) {
+
             log.info("Logged In");
-            UserDetails userDetails = loadUserByUsername(username);
-            String token = jwtTokenUtil.generateToken(userDetails);
+            final UserDetails userDetails = loadUserByUsername(username);
+            final String token = jwtTokenUtil.generateToken(userDetails);
+
             final Map<String, Object> responseMap = getResponseEntity(true, "Logged In", token);
             return ResponseEntity.status(200).body(responseMap);
+
         } else {
+
             final Map<String, Object> responseMap = getResponseEntity(true, "Invalid Credentials", null);
             return ResponseEntity.status(401).body(responseMap);
         }
@@ -64,13 +66,11 @@ public class AuthorizationService {
 
     private static Map<String, Object> getResponseEntity(final boolean err, final String message, final String token) {
         Map<String, Object> responseMap = new HashMap<>();
-
         responseMap.put("error", err);
         responseMap.put("message", message);
         responseMap.put("token", token);
         return responseMap;
     }
-
 
     private UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         com.jwts.springjwt.model.User user = userRepository.findByUserName(username);
