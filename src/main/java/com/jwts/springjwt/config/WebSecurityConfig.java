@@ -50,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             ObjectMapper mapper = new ObjectMapper();
             response.setStatus(401);
             responseMap.put("error", true);
-            responseMap.put("message", "Unauthorized");
+            responseMap.put("message", "JWT Token is invalid/expired");
             response.setHeader("content-type", "application/json");
             String responseMsg = mapper.writeValueAsString(responseMap);
             response.getWriter().write(responseMsg);

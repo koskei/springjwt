@@ -1,9 +1,9 @@
 package com.jwts.springjwt.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,6 +12,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 public class User {
 
     @Id
@@ -20,6 +21,6 @@ public class User {
     private String lastName;
     private String email;
     private String password;
-    private String role;
+    private Role role;
 
 }
