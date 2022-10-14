@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,24 +36,29 @@ public class AuthorizationService {
     }
 
 
-    public ResponseEntity<Map<String, Object>> getMapResponseEntity(String username, String password) {
+    public ResponseEntity<Map<String, Object>> authenticateUser(String username, String password) {
         try {
-            Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password));
+            return validateUserCredentials(username, password);
 
-            if (auth.isAuthenticated()) {
-                log.info("Logged In");
-                UserDetails userDetails = loadUserByUsername(username);
-                String token = jwtTokenUtil.generateToken(userDetails);
-                final Map<String, Object> responseMap = getResponseEntity(true, "Logged In", token);
-                return ResponseEntity.status(200).body(responseMap);
-            } else {
-                final Map<String, Object> responseMap = getResponseEntity(true, "Invalid Credentials", null);
-                return ResponseEntity.status(401).body(responseMap);
-            }
         } catch (BadCredentialsException e) {
             final Map<String, Object> errMessage = getResponseEntity(true, "Invalid Credentials", null);
             return ResponseEntity.status(401).body(errMessage);
+        }
+    }
+
+    private ResponseEntity<Map<String, Object>> validateUserCredentials(String username, String password) {
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password));
+
+        if (auth.isAuthenticated()) {
+            log.info("Logged In");
+            UserDetails userDetails = loadUserByUsername(username);
+            String token = jwtTokenUtil.generateToken(userDetails);
+            final Map<String, Object> responseMap = getResponseEntity(true, "Logged In", token);
+            return ResponseEntity.status(200).body(responseMap);
+        } else {
+            final Map<String, Object> responseMap = getResponseEntity(true, "Invalid Credentials", null);
+            return ResponseEntity.status(401).body(responseMap);
         }
     }
 

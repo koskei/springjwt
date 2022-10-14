@@ -30,7 +30,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> loginUser(@RequestParam("user_name") String username,
                                        @RequestParam("password") String password) {
-        return authorizationService.getMapResponseEntity(username, password);
+        return authorizationService.authenticateUser(username, password);
     }
 
     @PostMapping("/register")

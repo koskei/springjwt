@@ -32,7 +32,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         com.jwts.springjwt.model.User user = userRepository.findByUserName(username);
         log.info(user.toString());
         return getUserAuthority(user.getRole().name(), user.getUserName(), user.getPassword());
@@ -57,13 +57,13 @@ public class JwtUserDetailsService implements UserDetailsService {
         return responseMap;
     }
 
-    private static User getUserAuthority(String userRole, String username, String password) {
+    private static User getUserAuthority(final String userRole, final String username, final String password) {
         List<GrantedAuthority> authorityList = new ArrayList<>();
         authorityList.add(new SimpleGrantedAuthority(userRole));
         return new User(username, password, authorityList);
     }
 
-    private com.jwts.springjwt.model.User getUser(String firstName, String lastName, String email, String password) {
+    private com.jwts.springjwt.model.User getUser(final String firstName, final String lastName, final String email, final String password) {
         final String encodedPassword = new BCryptPasswordEncoder().encode(password);
         return com.jwts.springjwt.model.User.builder()
                 .password(encodedPassword)
